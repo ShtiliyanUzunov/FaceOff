@@ -6,18 +6,65 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:baselineAligned="false">
 
-  <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
-      android:id="@+id/preview"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight=".50"
+        android:layout_width="0dp"
+        android:layout_margin="10dp"
+        android:layout_height="match_parent">
 
-    <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
-        android:id="@+id/faceOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Application"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            style="@style/TextAppearance.AppCompat.Headline" />
 
-  </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            android:id="@+id/imageView" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt."
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight=".50"
+        android:layout_width="0dp"
+        android:layout_margin="10dp"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Debug"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal" />
+
+        <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
+          android:id="@+id/preview"
+          android:layout_width="match_parent"
+          android:layout_height="250dp"
+            android:layout_weight="1.00">
+
+        <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
+            android:id="@+id/faceOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+      </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+    </LinearLayout>
 
 </LinearLayout>
