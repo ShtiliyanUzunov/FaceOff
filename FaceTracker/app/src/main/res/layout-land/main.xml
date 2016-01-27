@@ -110,12 +110,6 @@
                     android:text="Right Eye:" />
                 <TextView
                     style="@style/TextAppearance.AppCompat.Headline"
-                    android:id="@+id/centerLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Center:" />
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Headline"
                     android:id="@+id/widthLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

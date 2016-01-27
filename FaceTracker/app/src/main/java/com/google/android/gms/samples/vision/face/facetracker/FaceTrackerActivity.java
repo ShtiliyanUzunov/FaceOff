@@ -28,6 +28,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -47,6 +48,7 @@ import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicO
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -70,6 +72,13 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
+    private float smile;
+    private float leftEye;
+    private float rightEye;
+    private float width;
+    private float height;
+
+    Runnable updateLabelsFromBackground;
     //==============================================================================================
     // Activity Methods
     //==============================================================================================
@@ -96,6 +105,41 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         setBarChartData();
         setHorizontalBarChartData();
+        updateLabelsFromBackground = new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) findViewById(R.id.smileLabel)).setText(String.format("Smile: %.2f", smile));
+                ((TextView)findViewById(R.id.leftEyeLabel)).setText(String.format("LeftEye: %.2f", leftEye));
+                ((TextView)findViewById(R.id.rightEyeLabel)).setText(String.format("RightEye: %.2f", rightEye));
+                ((TextView)findViewById(R.id.widthLabel)).setText(String.format("Width: %.2f", width));
+                ((TextView)findViewById(R.id.heightLabel)).setText(String.format("Height: %.2f", height));
+            }
+        };
+    }
+
+    public void setSmile(float smile) {
+        this.smile = smile;
+        runOnUiThread(updateLabelsFromBackground);
+    }
+
+    public void setLeftEye(float leftEye) {
+        this.leftEye = leftEye;
+        runOnUiThread(updateLabelsFromBackground);
+    }
+
+    public void setRightEye(float rightEye) {
+        this.rightEye = rightEye;
+        runOnUiThread(updateLabelsFromBackground);
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+        runOnUiThread(updateLabelsFromBackground);
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+        runOnUiThread(updateLabelsFromBackground);
     }
 
     private void setBarChartData() {
@@ -201,7 +245,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .build();
 
         detector.setProcessor(
-                new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
+                new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(this))
                         .build());
 
         if (!detector.isOperational()) {
@@ -341,9 +385,15 @@ public final class FaceTrackerActivity extends AppCompatActivity {
      * uses this factory to create face trackers as needed -- one for each individual.
      */
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
+        FaceTrackerActivity activity;
+
+        GraphicFaceTrackerFactory(FaceTrackerActivity ac) {
+            activity = ac;
+        }
+
         @Override
         public Tracker<Face> create(Face face) {
-            return new GraphicFaceTracker(mGraphicOverlay);
+            return new GraphicFaceTracker(mGraphicOverlay, activity);
         }
     }
 
@@ -354,14 +404,20 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
         private FaceGraphic mFaceGraphic;
+        private FaceTrackerActivity activity;
 
-        GraphicFaceTracker(GraphicOverlay overlay) {
+        GraphicFaceTracker(GraphicOverlay overlay, FaceTrackerActivity ac) {
+            activity = ac;
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay);
         }
 
         private void updateLabels(Face face) {
-
+            activity.setSmile(face.getIsSmilingProbability());
+            activity.setLeftEye(face.getIsLeftEyeOpenProbability());
+            activity.setRightEye(face.getIsRightEyeOpenProbability());
+            activity.setWidth(face.getWidth());
+            activity.setHeight(face.getHeight());
         }
 
         /**
