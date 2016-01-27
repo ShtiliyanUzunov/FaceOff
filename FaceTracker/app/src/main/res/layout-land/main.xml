@@ -40,7 +40,7 @@
             android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt." />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
@@ -48,56 +48,118 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <TextView
-            android:id="@+id/textView2"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
+
+
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Debug" />
-
-        <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
-            android:id="@+id/preview"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.00">
-
-            <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
-                android:id="@+id/faceOverlay"
+            android:layout_alignParentTop="true">
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="400dp"
-                android:layout_height="300dp" />
+                android:layout_height="300dp">
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
 
+                    android:text="Debug" />
+                <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
+                    android:id="@+id/preview"
+                    android:layout_width="400dp"
+                    android:layout_height="290dp">
 
-        </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+                    <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
+                        android:id="@+id/faceOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Analytics" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/smileLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smile:" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/leftEyeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Left Eye:" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/rightEyeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Right Eye:" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/centerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Center:" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/widthLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Face Width:" />
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/heightLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Face Height:" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <TextView
             style="@style/TextAppearance.AppCompat.Title"
+            android:id="@+id/EmotionLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/chart1"
             android:layout_gravity="center_horizontal"
             android:text="Emotional Graph" />
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart1"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_above="@+id/seekBar1" />
+            android:layout_above="@+id/categoryLabel"
+            android:layout_height="150dp" />
 
         <TextView
             style="@style/TextAppearance.AppCompat.Title"
+            android:id="@+id/categoryLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center_horizontal"
+            android:layout_above="@+id/categoryChart"
             android:text="Category priority" />
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/categoryChart"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_above="@+id/seekBar1"
+            android:layout_alignParentBottom="true"
             android:background="@android:color/white" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

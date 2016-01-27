@@ -360,12 +360,17 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             mFaceGraphic = new FaceGraphic(overlay);
         }
 
+        private void updateLabels(Face face) {
+
+        }
+
         /**
          * Start tracking the detected face instance within the face overlay.
          */
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
+            updateLabels(item);
         }
 
         /**
@@ -375,6 +380,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
             mFaceGraphic.updateFace(face);
+            updateLabels(face);
         }
 
         /**
