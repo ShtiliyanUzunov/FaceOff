@@ -9,7 +9,7 @@
     android:keepScreenOn="true"
     android:baselineAligned="false">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_weight=".50"
         android:layout_width="0dp"
@@ -17,25 +17,29 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="Application"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             style="@style/TextAppearance.AppCompat.Headline" />
 
         <ImageView
+            android:layout_below="@+id/textView"
+            android:layout_above="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="290dp"
             android:id="@+id/imageView" />
 
         <TextView
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="100dp"
             android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt."
-            android:id="@+id/textView3"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
+            android:id="@+id/textView3" />
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -56,15 +60,20 @@
         <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
           android:id="@+id/preview"
           android:layout_width="match_parent"
-          android:layout_height="250dp"
+          android:layout_height="300dp"
             android:layout_weight="1.00">
 
         <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
             android:id="@+id/faceOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="400dp"
+            android:layout_height="300dp" />
 
       </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+        <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_above="@+id/seekBar1" />
     </LinearLayout>
 
 </LinearLayout>
