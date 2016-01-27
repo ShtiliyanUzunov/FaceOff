@@ -1,79 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/topLayout"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:keepScreenOn="true"
-    android:baselineAligned="false">
+    android:orientation="horizontal">
 
     <RelativeLayout
-        android:orientation="vertical"
-        android:layout_weight=".50"
         android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:layout_height="match_parent">
+        android:layout_weight=".50"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_alignParentTop="true"
+            android:id="@+id/textView"
+            style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Application"
-            android:id="@+id/textView"
+            android:layout_alignParentTop="true"
             android:layout_gravity="center_horizontal"
-            style="@style/TextAppearance.AppCompat.Headline" />
+            android:gravity="center"
+            android:text="Application" />
 
         <ImageView
-            android:layout_below="@+id/textView"
-            android:layout_above="@+id/textView3"
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="290dp"
-            android:id="@+id/imageView" />
+            android:layout_above="@+id/textView3"
+            android:layout_below="@+id/textView" />
 
         <TextView
-            android:layout_alignParentBottom="true"
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt."
-            android:id="@+id/textView3" />
+            android:layout_alignParentBottom="true"
+            android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt." />
     </RelativeLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight=".50"
         android:layout_width="0dp"
-        android:layout_margin="10dp"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight=".50"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <TextView
+            android:id="@+id/textView2"
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Debug"
-            android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:text="Debug" />
 
         <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
-          android:id="@+id/preview"
-          android:layout_width="match_parent"
-          android:layout_height="300dp"
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1.00">
 
-        <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
-            android:id="@+id/faceOverlay"
-            android:layout_width="400dp"
-            android:layout_height="300dp" />
+            <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
+                android:id="@+id/faceOverlay"
+                android:layout_width="400dp"
+                android:layout_height="300dp" />
 
-      </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+
+        </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:text="Emotional Graph" />
+
         <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/chart1"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_above="@+id/seekBar1" />
+            android:id="@+id/chart1"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_above="@+id/seekBar1" />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:text="Category priority" />
+
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/categoryChart"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_above="@+id/seekBar1"
+            android:background="@android:color/white" />
     </LinearLayout>
 
 </LinearLayout>

@@ -29,6 +29,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -40,6 +46,7 @@ import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSo
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -47,6 +54,11 @@ import java.io.IOException;
  */
 
 public final class FaceTrackerActivity extends AppCompatActivity {
+    String[] mMonths = new String[] {
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+    };
+
+
     private static final String TAG = "FaceTracker";
 
     private CameraSource mCameraSource = null;
@@ -81,6 +93,67 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         } else {
             requestCameraPermission();
         }
+
+        setBarChartData();
+        setHorizontalBarChartData();
+    }
+
+    private void setBarChartData() {
+        BarChart chart = (BarChart)findViewById(R.id.chart1);
+
+        int count = 20;
+        float range = 50;
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add(mMonths[i % 12]);
+        }
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        for (int i = 0; i < count; i++) {
+            float mult = (range + 1);
+            float val = (float) (Math.random() * mult);
+            yVals1.add(new BarEntry(val, i));
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+        set1.setBarSpacePercent(35f);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+        //data.setValueTypeface(mTf);
+
+        chart.setData(data);
+    }
+
+    private void setHorizontalBarChartData() {
+        int count = 4;
+        float range = 1;
+
+        HorizontalBarChart chart = (HorizontalBarChart)findViewById(R.id.categoryChart);
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < count; i++) {
+            xVals.add(mMonths[i % 12]);
+            yVals1.add(new BarEntry((float) (Math.random() * range), i));
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "DataSet 1");
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+        //data.setValueTypeface(tf);
+
+        chart.setData(data);
     }
 
     /**
