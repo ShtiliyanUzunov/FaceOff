@@ -25,7 +25,71 @@
             android:gravity="center"
             android:text="Application" />
 
-        <ImageView
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <ViewFlipper
+                android:id="@+id/view_flipper"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/adorable" />
+
+                    <TextView
+                        style="@style/ImageTitle"
+                        android:text="@string/adorable" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/cangaroo" />
+
+                    <TextView
+                        style="@style/ImageTitle"
+                        android:text="@string/cangaroo" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/gosip" />
+
+                    <TextView
+                        style="@style/ImageTitle"
+                        android:text="@string/gosip" />
+                </RelativeLayout>
+            </ViewFlipper>
+        </RelativeLayout>
+        <!--<ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="290dp"
@@ -38,6 +102,7 @@
             android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:text="Lorem ipsum dolor sit amet, eligendi mandamus vis ad. Dolorum probatus abhorreant at eum, mea cetero praesent pericula ex. Nihil numquam meliore eum in, mea sumo impedit et. Eu pri sint prompta, simul maluisset no vis. Ut duo noluisse complectitur. Iusto mucius corpora nec in, eos porro velit ut. Ex mei quem fabellas reprehendunt." />
+        -->
     </RelativeLayout>
 
     <RelativeLayout
