@@ -132,13 +132,19 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/chart1"
             android:layout_gravity="center_horizontal"
-            android:text="Emotional Graph" />
+            android:text="Emotion Graph" />
 
-        <com.github.mikephil.charting.charts.BarChart
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart1"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_above="@+id/categoryLabel" />
+
+        <!--<com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart1"
             android:layout_width="match_parent"
             android:layout_above="@+id/categoryLabel"
-            android:layout_height="150dp" />
+            android:layout_height="150dp" /> -->
 
         <TextView
             style="@style/TextAppearance.AppCompat.Title"

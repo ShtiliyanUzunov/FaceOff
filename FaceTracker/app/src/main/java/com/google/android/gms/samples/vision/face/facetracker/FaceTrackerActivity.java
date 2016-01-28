@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -32,10 +33,17 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -78,7 +86,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private float width;
     private float height;
 
-    Runnable updateLabelsFromBackground;
+    private Runnable updateLabelsFromBackground;
+    private EmotionGraph emotionGraph;
+
     //==============================================================================================
     // Activity Methods
     //==============================================================================================
@@ -103,8 +113,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             requestCameraPermission();
         }
 
-        setBarChartData();
-        setHorizontalBarChartData();
+        initHorizontalBarChartData();
+        emotionGraph = new EmotionGraph((LineChart)findViewById(R.id.chart1));
         updateLabelsFromBackground = new Runnable() {
             @Override
             public void run() {
@@ -113,12 +123,92 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.rightEyeLabel)).setText(String.format("RightEye: %.2f", rightEye));
                 ((TextView)findViewById(R.id.widthLabel)).setText(String.format("Width: %.2f", width));
                 ((TextView)findViewById(R.id.heightLabel)).setText(String.format("Height: %.2f", height));
+                //((TextView)findViewById(R.id.textView2)).setText("Total count: " + emotionGraph.getDataSize());
+                //((TextView)findViewById(R.id.textView2)).setText("Average: " + emotionGraph.getAverage());
+                emotionGraph.invalidateChart();
             }
         };
     }
 
+    private void initLineChart() {
+        /*LineChart chart = (LineChart)findViewById(R.id.chart1);
+
+        int count = 200;
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add((1990 +i) + "");
+        }
+
+        ArrayList<Entry> vals1 = new ArrayList<Entry>();
+
+        for (int i = 0; i < count; i++) {
+            float val = (float)Math.random();
+            vals1.add(new Entry(val, i));
+        }
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(vals1, "");
+
+        set1.setDrawCubic(true);
+        set1.setCubicIntensity(0.2f);
+        set1.setDrawFilled(true);
+        set1.setDrawCircles(true);
+        set1.setLineWidth(1.8f);
+        set1.setCircleRadius(4f);
+        set1.setCircleColor(Color.RED);
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+        set1.setColor(Color.RED);
+        set1.setFillColor(Color.RED);
+        set1.setFillAlpha(50);
+        set1.setDrawHorizontalHighlightIndicator(false);
+        set1.setFillFormatter(new FillFormatter() {
+            @Override
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                return -10;
+            }
+        });
+
+        // create a data object with the datasets
+        LineData data = new LineData(xVals, set1);
+        data.setValueTextSize(9f);
+        data.setDrawValues(false);
+
+        chart.setBackgroundColor(Color.rgb(255,255,255));
+        chart.setData(data);*/
+    }
+
+    private void initHorizontalBarChartData() {
+        int count = 4;
+        float range = 1;
+
+        HorizontalBarChart chart = (HorizontalBarChart)findViewById(R.id.categoryChart);
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < count; i++) {
+            xVals.add(mMonths[i % 12]);
+            yVals1.add(new BarEntry((float) (Math.random() * range), i));
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "");
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+
+        chart.setData(data);
+    }
+
     public void setSmile(float smile) {
+        if (smile == -1) {
+            smile = 0;
+        }
         this.smile = smile;
+        emotionGraph.addPoint(smile);
         runOnUiThread(updateLabelsFromBackground);
     }
 
@@ -140,64 +230,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     public void setHeight(float height) {
         this.height = height;
         runOnUiThread(updateLabelsFromBackground);
-    }
-
-    private void setBarChartData() {
-        BarChart chart = (BarChart)findViewById(R.id.chart1);
-
-        int count = 20;
-        float range = 50;
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add(mMonths[i % 12]);
-        }
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(val, i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
-        set1.setBarSpacePercent(35f);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
-        //data.setValueTypeface(mTf);
-
-        chart.setData(data);
-    }
-
-    private void setHorizontalBarChartData() {
-        int count = 4;
-        float range = 1;
-
-        HorizontalBarChart chart = (HorizontalBarChart)findViewById(R.id.categoryChart);
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        for (int i = 0; i < count; i++) {
-            xVals.add(mMonths[i % 12]);
-            yVals1.add(new BarEntry((float) (Math.random() * range), i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet 1");
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
-        //data.setValueTypeface(tf);
-
-        chart.setData(data);
     }
 
     /**
