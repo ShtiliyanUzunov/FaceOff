@@ -4,4 +4,7 @@
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="adorable">I\'m not a cat person but wow this little guy is adorable</string>
+    <string name="cangaroo">Why are we not obsessed with tree kangaroos? They\'re cute as f**k!</string>
+    <string name="gosip">My dog like to gossip over the garden wall</string>
 </resources>
