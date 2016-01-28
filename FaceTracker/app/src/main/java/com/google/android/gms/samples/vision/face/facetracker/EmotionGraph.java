@@ -37,24 +37,14 @@ public class EmotionGraph {
     }
 
     public void addPoint(float val) {
-        data.put((int) (System.currentTimeMillis() - start), val);
+        synchronized (data) {
+            data.put((int) (System.currentTimeMillis() - start), val);
+        }
     }
 
     public void invalidateChart() {
         updateData();
         chart.invalidate();
-    }
-
-    public int getDataSize() {
-        return data.size();
-    }
-
-    public float getAverage() {
-        float total = 0;
-        for (float record: data.values()) {
-            total += record;
-        }
-        return total/data.size();
     }
 
     private void updateData() {

@@ -22,28 +22,23 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.FillFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -56,7 +51,6 @@ import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicO
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -89,6 +83,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private Runnable updateLabelsFromBackground;
     private EmotionGraph emotionGraph;
 
+    private ViewFlipper mViewFlipper;
+    private GestureDetector mGestureDetector;
+
+    View.OnTouchListener gestureListener;
     //==============================================================================================
     // Activity Methods
     //==============================================================================================
@@ -113,6 +111,19 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             requestCameraPermission();
         }
 
+        mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+
+
+        final CustomGestureDetector customGestureDetector = new CustomGestureDetector();
+        mGestureDetector = new GestureDetector(mViewFlipper.getContext(), customGestureDetector);
+        mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(final View view, final MotionEvent event) {
+                mGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
         initHorizontalBarChartData();
         emotionGraph = new EmotionGraph((LineChart)findViewById(R.id.chart1));
         updateLabelsFromBackground = new Runnable() {
@@ -128,54 +139,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 emotionGraph.invalidateChart();
             }
         };
-    }
-
-    private void initLineChart() {
-        /*LineChart chart = (LineChart)findViewById(R.id.chart1);
-
-        int count = 200;
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add((1990 +i) + "");
-        }
-
-        ArrayList<Entry> vals1 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-            float val = (float)Math.random();
-            vals1.add(new Entry(val, i));
-        }
-
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(vals1, "");
-
-        set1.setDrawCubic(true);
-        set1.setCubicIntensity(0.2f);
-        set1.setDrawFilled(true);
-        set1.setDrawCircles(true);
-        set1.setLineWidth(1.8f);
-        set1.setCircleRadius(4f);
-        set1.setCircleColor(Color.RED);
-        set1.setHighLightColor(Color.rgb(244, 117, 117));
-        set1.setColor(Color.RED);
-        set1.setFillColor(Color.RED);
-        set1.setFillAlpha(50);
-        set1.setDrawHorizontalHighlightIndicator(false);
-        set1.setFillFormatter(new FillFormatter() {
-            @Override
-            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                return -10;
-            }
-        });
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, set1);
-        data.setValueTextSize(9f);
-        data.setDrawValues(false);
-
-        chart.setBackgroundColor(Color.rgb(255,255,255));
-        chart.setData(data);*/
     }
 
     private void initHorizontalBarChartData() {
@@ -405,6 +368,32 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 mCameraSource.release();
                 mCameraSource = null;
             }
+        }
+    }
+
+    // Inner Classes
+    //==============================================================================================
+    private class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            // Swipe left (next)
+            if (e1.getX() > e2.getX()) {
+                // Set in/out flipping animations
+                mViewFlipper.setInAnimation(FaceTrackerActivity.this, R.anim.in_from_right);
+                mViewFlipper.setOutAnimation(FaceTrackerActivity.this, R.anim.out_from_left);
+                mViewFlipper.showNext();
+            }
+
+            // Swipe right (previous)
+            if (e1.getX() < e2.getX()) {
+                mViewFlipper.setInAnimation(FaceTrackerActivity.this, R.anim.in_from_left);
+                mViewFlipper.setOutAnimation(FaceTrackerActivity.this, R.anim.out_from_right);
+
+                mViewFlipper.showPrevious();
+            }
+
+            return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
 

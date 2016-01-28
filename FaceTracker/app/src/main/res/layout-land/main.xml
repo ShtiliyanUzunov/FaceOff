@@ -25,17 +25,11 @@
             android:gravity="center"
             android:text="Application" />
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
             <ViewFlipper
                 android:id="@+id/view_flipper"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_below="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -87,8 +81,9 @@
                         style="@style/ImageTitle"
                         android:text="@string/gosip" />
                 </RelativeLayout>
+
             </ViewFlipper>
-        </RelativeLayout>
+
         <!--<ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
