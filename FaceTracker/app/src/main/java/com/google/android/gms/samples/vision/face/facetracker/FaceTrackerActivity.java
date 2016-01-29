@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -30,11 +31,13 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -85,6 +88,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private ViewFlipper mViewFlipper;
     private GestureDetector mGestureDetector;
+    private CatalogManager catalogManager;
+
+    private boolean useFirstFlipperImage = true;
+    private boolean pageReset = false;
 
     View.OnTouchListener gestureListener;
     //==============================================================================================
@@ -101,6 +108,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        catalogManager = new CatalogManager();
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -113,7 +121,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
 
-
         final CustomGestureDetector customGestureDetector = new CustomGestureDetector();
         mGestureDetector = new GestureDetector(mViewFlipper.getContext(), customGestureDetector);
         mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
@@ -124,7 +131,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             }
         });
 
-        initHorizontalBarChartData();
+        setHorizontalBarChartData();
         emotionGraph = new EmotionGraph((LineChart)findViewById(R.id.chart1));
         updateLabelsFromBackground = new Runnable() {
             @Override
@@ -134,36 +141,68 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.rightEyeLabel)).setText(String.format("RightEye: %.2f", rightEye));
                 ((TextView)findViewById(R.id.widthLabel)).setText(String.format("Width: %.2f", width));
                 ((TextView)findViewById(R.id.heightLabel)).setText(String.format("Height: %.2f", height));
-                //((TextView)findViewById(R.id.textView2)).setText("Total count: " + emotionGraph.getDataSize());
-                //((TextView)findViewById(R.id.textView2)).setText("Average: " + emotionGraph.getAverage());
                 emotionGraph.invalidateChart();
+                if (pageReset) {
+                    emotionGraph.clearData();
+                    setHorizontalBarChartData();
+                }
+                pageReset = false;
             }
         };
+
+        updateFlipper(catalogManager.getContent());
     }
 
-    private void initHorizontalBarChartData() {
-        int count = 4;
-        float range = 1;
+    private void updateFlipper(Object[] data) {
+
+        String title = (String)data[0];
+        Integer imgId = (Integer)data[1];
+
+        ImageView imageView;
+        TextView textView;
+
+        if (useFirstFlipperImage) {
+            imageView = (ImageView)(findViewById(R.id.firstFlipperImage));
+            textView = (TextView)(findViewById(R.id.firstFlipperTitle));
+        } else {
+            imageView = (ImageView)(findViewById(R.id.secondFlipperImage));
+            textView = (TextView)(findViewById(R.id.secondFlipperTitle));
+        }
+
+        useFirstFlipperImage = !useFirstFlipperImage;
+
+        imageView.setImageResource(imgId);
+        textView.setText(title);
+    }
+
+    private void setHorizontalBarChartData() {
 
         HorizontalBarChart chart = (HorizontalBarChart)findViewById(R.id.categoryChart);
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
         ArrayList<String> xVals = new ArrayList<String>();
 
-        for (int i = 0; i < count; i++) {
-            xVals.add(mMonths[i % 12]);
-            yVals1.add(new BarEntry((float) (Math.random() * range), i));
+        Catalog[] catalogs = catalogManager.catalogs;
+        for (int i = 0; i < catalogs.length; i++) {
+            Catalog catalog = catalogs[i];
+            xVals.add(catalog.getName());
+            yVals1.add(new BarEntry(catalog.probability, i));
         }
 
         BarDataSet set1 = new BarDataSet(yVals1, "");
+        set1.setColor(Color.GREEN);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(set1);
 
         BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
+
+        data.setValueTextSize(20f);
 
         chart.setData(data);
+        chart.getAxisLeft().setAxisMaxValue(1);
+        chart.setDescription("");
+        chart.invalidate();
     }
 
     public void setSmile(float smile) {
@@ -380,18 +419,28 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             // Swipe left (next)
             if (e1.getX() > e2.getX()) {
                 // Set in/out flipping animations
+                boolean likeFound = emotionGraph.likeWindowFound();
+                if (likeFound) {
+                    catalogManager.updateLike();
+                } else {
+                    catalogManager.updateDislike();
+                }
+                Object[] data = catalogManager.getContent();
+                updateFlipper(data);
+                pageReset = true;
+                runOnUiThread(updateLabelsFromBackground);
                 mViewFlipper.setInAnimation(FaceTrackerActivity.this, R.anim.in_from_right);
                 mViewFlipper.setOutAnimation(FaceTrackerActivity.this, R.anim.out_from_left);
                 mViewFlipper.showNext();
             }
 
             // Swipe right (previous)
-            if (e1.getX() < e2.getX()) {
+            /*if (e1.getX() < e2.getX()) {
                 mViewFlipper.setInAnimation(FaceTrackerActivity.this, R.anim.in_from_left);
                 mViewFlipper.setOutAnimation(FaceTrackerActivity.this, R.anim.out_from_right);
 
                 mViewFlipper.showPrevious();
-            }
+            }*/
 
             return super.onFling(e1, e2, velocityX, velocityY);
         }

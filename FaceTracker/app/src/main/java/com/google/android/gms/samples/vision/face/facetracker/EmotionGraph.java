@@ -47,6 +47,12 @@ public class EmotionGraph {
         chart.invalidate();
     }
 
+    public void clearData() {
+        start = System.currentTimeMillis();
+        data = new HashMap<Integer, Float>();
+        updateData();
+    }
+
     private void updateData() {
         synchronized (data)  {
             ArrayList<String> xVals = new ArrayList<String>();
@@ -85,8 +91,19 @@ public class EmotionGraph {
 
             LineData data = new LineData(xVals, set);
             chart.setData(data);
+            chart.getAxisLeft().setAxisMaxValue(1);
         }
 
+    }
+
+    public boolean likeWindowFound() {
+        float threshold = 0.7f;
+        for (Map.Entry<Integer, Float> entry: data.entrySet()) {
+            if (entry.getValue() > threshold) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

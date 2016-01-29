@@ -36,16 +36,16 @@
                     android:layout_height="fill_parent">
 
                     <ImageView
+                        android:id="@+id/firstFlipperImage"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/adorable" />
+                        android:scaleType="centerCrop" />
 
                     <TextView
                         style="@style/ImageTitle"
-                        android:text="@string/adorable" />
+                        android:id="@+id/firstFlipperTitle" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -53,33 +53,16 @@
                     android:layout_height="fill_parent">
 
                     <ImageView
+                        android:id="@+id/secondFlipperImage"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/cangaroo" />
+                        android:scaleType="centerCrop" />
 
                     <TextView
                         style="@style/ImageTitle"
-                        android:text="@string/cangaroo" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/gosip" />
-
-                    <TextView
-                        style="@style/ImageTitle"
-                        android:text="@string/gosip" />
+                        android:id="@+id/secondFlipperTitle" />
                 </RelativeLayout>
 
             </ViewFlipper>
