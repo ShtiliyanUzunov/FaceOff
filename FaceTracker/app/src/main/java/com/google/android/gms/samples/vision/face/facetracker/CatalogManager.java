@@ -40,6 +40,11 @@ public class CatalogManager {
         return catalogs[index].getNextItem();
     }
 
+    public String getCatalogTitle() {
+        return catalogs[currentCatalog].getName();
+    }
+
+
     public void updateDislike() {
         float changeCurrent = p * catalogs[currentCatalog].probability;
         float changeOthers = changeCurrent/3.0f;

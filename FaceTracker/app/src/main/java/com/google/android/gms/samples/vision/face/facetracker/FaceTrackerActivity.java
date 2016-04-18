@@ -155,7 +155,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private void updateFlipper(Object[] data) {
 
-        String title = (String)data[0];
+        String title = "Category: " + catalogManager.getCatalogTitle() + "\n" + (String)data[0];
         Integer imgId = (Integer)data[1];
 
         ImageView imageView;
